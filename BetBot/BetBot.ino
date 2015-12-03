@@ -7,13 +7,13 @@
 #define LED 13
  
 // this might need to be tuned for different lighting conditions, surfaces, etc.
-#define QTR_THRESHOLD  1500 // microseconds
+#define QTR_THRESHOLD  1000 // microseconds
   
 // these might need to be tuned for different motor types
-#define REVERSE_SPEED     200 // 0 is stopped, 400 is full speed
-#define TURN_SPEED        200
-#define FORWARD_SPEED     200
-#define REVERSE_DURATION  200 // ms
+#define REVERSE_SPEED     400 // 0 is stopped, 400 is full speed
+#define TURN_SPEED        400
+#define FORWARD_SPEED     400
+#define REVERSE_DURATION  100 // ms
 #define TURN_DURATION     300 // ms
  
 ZumoBuzzer buzzer;
@@ -32,14 +32,14 @@ void waitForButtonAndCountDown()
   digitalWrite(LED, LOW);
    
   // play audible countdown
-  for (int i = 0; i < 3; i++)
+  /*for (int i = 0; i < 3; i++)
   {
     delay(1000);
     buzzer.playNote(NOTE_G(3), 200, 15);
   }
   delay(1000);
   buzzer.playNote(NOTE_G(4), 500, 15);  
-  delay(1000);
+  delay(1000);*/
 }
  
 void setup()
