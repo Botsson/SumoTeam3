@@ -63,7 +63,11 @@ void loop()
     waitForButtonAndCountDown();
   }
    
+  borderDetect();
+}
 
+bool borderDetect()
+{
   sensors.read(sensor_values);
   
   if (sensor_values[0] < QTR_THRESHOLD)
@@ -74,6 +78,8 @@ void loop()
     motors.setSpeeds(TURN_SPEED, -TURN_SPEED);
     delay(TURN_DURATION);
     motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
+    
+    return true;
   }
   else if (sensor_values[5] < QTR_THRESHOLD)
   {
@@ -83,10 +89,28 @@ void loop()
     motors.setSpeeds(-TURN_SPEED, TURN_SPEED);
     delay(TURN_DURATION);
     motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
+    
+    return true;
   }
   else
   {
     // otherwise, go straight
     motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
+    return false;
   }
 }
+
+bool sensorDetect(int validDistance)
+{
+  int sensorDistance = 999;
+  if (sensorDistance < validDistance) {
+    reverseAndDodge();
+  }
+}
+
+void reverseAndDodge() 
+{
+  
+}
+
+
