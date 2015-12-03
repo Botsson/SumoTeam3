@@ -1,3 +1,17 @@
+/*
+ * Demo line-following code for the Pololu Zumo Robot
+ *
+ * This code will follow a black line on a white background, using a
+ * PID-based algorithm.  It works decently on courses with smooth, 6"
+ * radius curves and has been tested with Zumos using 30:1 HP and
+ * 75:1 HP motors.  Modifications might be required for it to work
+ * well on different courses or with different motors.
+ *
+ * http://www.pololu.com/catalog/product/2506
+ * http://www.pololu.com
+ * http://forum.pololu.com
+ */
+
 #include <QTRSensors.h>
 #include <ZumoReflectanceSensorArray.h>
 #include <ZumoMotors.h>
@@ -13,7 +27,7 @@ int lastError = 0;
 
 // This is the maximum speed the motors will be allowed to turn.
 // (400 lets the motors go at top speed; decrease to impose a speed limit)
-const int MAX_SPEED = 150;
+const int MAX_SPEED = 400;
 
 
 void setup()
