@@ -1,3 +1,4 @@
+#include <NewPing.h>
 #include <ZumoBuzzer.h>
 #include <ZumoMotors.h>
 #include <Pushbutton.h>
@@ -5,17 +6,22 @@
 #include <ZumoReflectanceSensorArray.h>
  
 #define LED 13
+
+#define TRIGGER_PIN  2
+#define ECHO_PIN     6
+#define MAX_DISTANCE 200
  
 // this might need to be tuned for different lighting conditions, surfaces, etc.
 #define QTR_THRESHOLD  1000 // microseconds
   
 // these might need to be tuned for different motor types
 #define REVERSE_SPEED     400 // 0 is stopped, 400 is full speed
-#define TURN_SPEED        400
-#define FORWARD_SPEED     400
+#define TURN_SPEED        200
+#define FORWARD_SPEED     200
 #define REVERSE_DURATION  100 // ms
-#define TURN_DURATION     300 // ms
- 
+#define TURN_DURATION     200 // ms
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 ZumoBuzzer buzzer;
 ZumoMotors motors;
 Pushbutton button(ZUMO_BUTTON); // pushbutton on pin 12
@@ -30,16 +36,6 @@ void waitForButtonAndCountDown()
   digitalWrite(LED, HIGH);
   button.waitForButton();
   digitalWrite(LED, LOW);
-   
-  // play audible countdown
-  /*for (int i = 0; i < 3; i++)
-  {
-    delay(1000);
-    buzzer.playNote(NOTE_G(3), 200, 15);
-  }
-  delay(1000);
-  buzzer.playNote(NOTE_G(4), 500, 15);  
-  delay(1000);*/
 }
  
 void setup()
@@ -49,6 +45,8 @@ void setup()
   //motors.flipRightMotor(true);
    
   pinMode(LED, HIGH);
+  
+  Serial.begin(115200);
    
   waitForButtonAndCountDown();
 }
@@ -62,8 +60,13 @@ void loop()
     button.waitForRelease();
     waitForButtonAndCountDown();
   }
-   
-  borderDetect();
+  
+  //borderDetect();
+  /*if(borderDetect()) {
+    
+  } else {*/
+    sensorDetect(10);
+  //}
 }
 
 bool borderDetect()
@@ -100,17 +103,29 @@ bool borderDetect()
   }
 }
 
-bool sensorDetect(int validDistance)
+bool sensorDetect(int attackDistance)
 {
-  int sensorDistance = 999;
-  if (sensorDistance < validDistance) {
-    reverseAndDodge();
+  //Serial.print(uS / US_ROUNDTRIP_CM);
+  delay(50);
+  int sensorDistance = sonar.ping();
+  int sensorDistanceCM = sensorDistance / US_ROUNDTRIP_CM;
+  
+  Serial.print("Ping: ");
+  Serial.print(sensorDistance / US_ROUNDTRIP_CM);
+  Serial.println("cm");
+
+  if (sensorDistanceCM > 0 && sensorDistanceCM < attackDistance) { 
+    attack();
+  } else {
+    borderDetect();
   }
 }
 
-void reverseAndDodge() 
+void attack() 
 {
-  
+  int attackSpeed = 400;
+  Serial.print("Attack!");
+  motors.setSpeeds(attackSpeed, attackSpeed);
 }
 
 
